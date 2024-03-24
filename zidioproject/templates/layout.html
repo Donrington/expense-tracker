@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pagename}}</title>
+    <link href="../src/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    
+    <header class="fixed top-0 left-0 w-full z-30 bg-white shadow-md">
+        <nav class="max-w-6xl mx-auto px-4">
+          <div class="flex justify-between items-center py-4">
+            <!-- Website Logo -->
+            <div class="flex items-center">
+              <img src="../static/images/hut.png" alt="Logo" class="h-8 w-8 mr-2">
+              <span class="font-semibold text-gray-500 text-lg">Navigation</span>
+            </div>
+                  <!-- Primary Navbar items -->
+                  <div class="hidden md:flex items-center space-x-4">
+                    <a href="{{url_for('homepage')}}" class="text-green-500 font-semibold hover:text-green-600 transition duration-300">Home</a>
+                    <a href="#" class="text-gray-500 font-semibold hover:text-green-500 transition duration-300">Services</a>
+                    <a href="#" class="text-gray-500 font-semibold hover:text-green-500 transition duration-300">About</a>
+                    <a href="#" class="text-gray-500 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
+                    <!-- Additional Items -->
+               
+                  </div>
+                  <!-- Secondary Navbar items -->
+                
+
+                    {% if session.get('userlogged')!=None%}
+               
+                    <a class="py-2 px-4 font-medium text-white bg-black rounded-full hover:bg-green-500 transition duration-300" href="{{ url_for('dashboard') }}"><strong>Dashboard</strong></a>
+                 
+                
+                    <a class="py-2 px-4 font-medium text-gray-500 bg-transparent rounded-full border border-gray-300 hover:bg-gray-700 hover:text-white transition duration-300" href="{{ url_for('logout') }}"><strong>Logout {{ user.username}}</strong></a>
+                  
+                    {%else%}
+
+                    <div class="hidden md:flex items-center space-x-3">
+                      <a href="{{url_for('login')}}" class="py-2 px-4 font-medium text-gray-500 bg-transparent rounded-full border border-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">Log In</a>
+                      <a href="{{url_for('register')}}" class="py-2 px-4 font-medium text-white bg-black rounded-full hover:bg-green-500 transition duration-300">Sign Up</a>
+              
+                  {%endif%}
+                  </div>
+                  
+                  <!-- Mobile menu button -->
+                  <div class="md:hidden flex items-center">
+                    <button type="button" class="text-gray-500 hover:text-green-500 focus:outline-none focus:text-green-500">
+                      <img src="../static/images/menu.png" alt="menu">
+                    </button>
+                  </div>
+                </div>
+              </nav>
+            </header>
+             
+        {%block banner%}
+           
+          {%endblock%} 
+          {% block content %} 
+       
+         {%endblock%}
+         <!-- footer -->
+         {%block footer%}
+         
+        {%endblock%}
+            
+
+        
+             
+
+        
+     
+
+              <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+
+
+    
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const carouselImages = [
+            '../static/images/image1.jpg', // Replace with your image paths
+            '../static/images/image2.jpg',
+            '../static/images/tracker.jpg',
+          ];
+          
+          let currentImageIdx = 0;
+          const carousel = document.getElementById('carousel');
+          const indicatorsContainer = document.getElementById('carousel-indicators');
+        
+          function updateCarousel() {
+            const nextImageIdx = (currentImageIdx + 1) % carouselImages.length;
+            const newBgImage = `url('${carouselImages[nextImageIdx]}')`;
+      
+            // Start the fade-out effect
+            carousel.classList.add('fade-leave-active');
+            carousel.classList.remove('fade-enter-active');
+      
+            // Once the fade-out effect is finished, change the image and fade it in
+            setTimeout(() => {
+              carousel.style.backgroundImage = newBgImage;
+              carousel.classList.add('fade-enter-active');
+              carousel.classList.remove('fade-leave-active');
+              
+              // Update indicators
+              updateIndicators(nextImageIdx);
+      
+              // Set the next index
+              currentImageIdx = nextImageIdx;
+            }, 500); // this should be the same as your transition time
+          }
+      
+          function updateIndicators(index) {
+            if (indicatorsContainer.childNodes.length > 0) {
+              indicatorsContainer.childNodes.forEach((indicator, idx) => {
+                if (indicator.nodeType === Node.ELEMENT_NODE) {
+                  indicator.classList.toggle('bg-white', index === idx);
+                  indicator.classList.toggle('bg-gray-500', index !== idx);
+                }
+              });
+            }
+          }
+        
+          function createIndicators() {
+            carouselImages.forEach(() => {
+              const indicator = document.createElement('div');
+              indicator.className = 'h-3 w-3 rounded-full mx-2 bg-gray-500 cursor-pointer';
+              indicator.addEventListener('click', (event) => {
+                const index = Array.from(indicatorsContainer.childNodes).indexOf(event.target);
+                currentImageIdx = index;
+                updateCarousel();
+              });
+              indicatorsContainer.appendChild(indicator);
+            });
+          }
+        
+          createIndicators();
+          updateIndicators(0); // Initial call to set the active indicator
+          setInterval(updateCarousel, 3000 + 500); // 3 seconds plus 0.5s of transition time
+        });
+      </script>
+
+<script>
+    // Example JavaScript for a hover effect on the image
+    document.getElementById('responsive-image').addEventListener('mouseover', function() {
+      this.style.transform = 'scale(1.05)';
+      this.style.transition = 'transform 0.5s ease-in-out';
+    });
+  
+    document.getElementById('responsive-image').addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+    });
+  </script>
+      
+      <script>
+        // Simple JavaScript to add a click effect to the icons
+        document.querySelectorAll('.icon').forEach(item => {
+          item.addEventListener('click', () => {
+            item.classList.add('animate-ping');
+            setTimeout(() => item.classList.remove('animate-ping'), 1000);
+          });
+        });
+      </script>
+
+<script>
+    // Get all the icons
+    const icons = document.querySelectorAll('.icon');
+  
+    // Function to show tooltip
+    function showTooltip(event) {
+      const tooltipText = event.currentTarget.getAttribute('data-tooltip');
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip';
+      tooltip.textContent = tooltipText;
+      tooltip.style.position = 'absolute';
+      tooltip.style.left = `${event.clientX}px`;
+      tooltip.style.top = `${event.clientY + 20}px`; // 20 pixels below the cursor
+      tooltip.style.backgroundColor = 'black';
+      tooltip.style.color = 'white';
+      tooltip.style.padding = '4px 8px';
+      tooltip.style.borderRadius = '4px';
+      tooltip.style.pointerEvents = 'none'; // Make sure the tooltip doesn't interfere with other mouse events
+      document.body.appendChild(tooltip);
+    }
+  
+    // Function to hide tooltip
+    function hideTooltip() {
+      const tooltips = document.querySelectorAll('.tooltip');
+      tooltips.forEach(tooltip => {
+        tooltip.remove();
+      });
+    }
+  
+    // Attach the event listeners
+    icons.forEach(icon => {
+      icon.addEventListener('mouseenter', showTooltip);
+      icon.addEventListener('mouseleave', hideTooltip);
+    });
+  </script>
+  
+  <script>
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('header');
+      header.classList.toggle('sticky', window.scrollY > 0);
+    });
+  </script>
+  
+
+    
+</body>
+</html>
